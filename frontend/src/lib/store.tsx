@@ -42,6 +42,8 @@ interface Ctx {
     streakDays: number[]
     streak: number
   }
+  mobileSidebarOpen: boolean
+  setMobileSidebarOpen: (open: boolean) => void
 }
 
 const VaultContext = createContext<Ctx | null>(null)
@@ -56,6 +58,7 @@ export function VaultProvider({ children }: { children: ReactNode }) {
     return saved ? JSON.parse(saved) : null
   })
   const [token, setToken] = useState<string | null>(() => localStorage.getItem('token'))
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
 
   const [state, setState] = useState<VaultState>({
     days: [],
@@ -339,6 +342,8 @@ export function VaultProvider({ children }: { children: ReactNode }) {
     stopProblemTimer,
     refresh: loadBackendData,
     stats,
+    mobileSidebarOpen,
+    setMobileSidebarOpen,
   }
 
   return <VaultContext.Provider value={value}>{children}</VaultContext.Provider>

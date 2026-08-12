@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom'
-import { LayoutGrid, History, Play } from 'lucide-react'
+import { LayoutGrid, History, Play, X } from 'lucide-react'
 import { useVault } from '@/lib/store'
 
 const navItems = [
@@ -8,11 +8,11 @@ const navItems = [
 ]
 
 export default function Sidebar() {
-  const { stats, logoutUser } = useVault()
+  const { stats, logoutUser, mobileSidebarOpen, setMobileSidebarOpen } = useVault()
 
-  return (
-    <aside className="hidden md:flex md:w-64 shrink-0 flex-col border-r border-outline-variant bg-surface-container-lowest px-4 py-5">
-      <div className="overflow-hidden" style={{ height: '52px' }}>
+  const renderContent = (isMobile: boolean) => (
+    <>
+      <div className="overflow-hidden flex items-center justify-between" style={{ height: '52px' }}>
         <img
           src="/src/assets/optimal_logo.png"
           alt="Optimal.dev"
@@ -24,6 +24,15 @@ export default function Sidebar() {
             marginLeft: '-8px',
           }}
         />
+        {isMobile && (
+          <button
+            onClick={() => setMobileSidebarOpen(false)}
+            className="md:hidden grid h-9 w-9 place-items-center rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors"
+            aria-label="Close menu"
+          >
+            <X size={18} strokeWidth={2} />
+          </button>
+        )}
       </div>
       <p className="px-2 mt-2 mb-6 text-xs text-on-surface-variant font-mono-tight">
         Practice Streak: <span className="text-primary-bright font-semibold">{stats.streak} Days</span>
@@ -35,6 +44,9 @@ export default function Sidebar() {
             key={to}
             to={to}
             end={end}
+            onClick={() => {
+              if (isMobile) setMobileSidebarOpen(false)
+            }}
             className={({ isActive }) =>
               `group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
                 isActive
@@ -76,6 +88,9 @@ export default function Sidebar() {
           href="https://neetcode.io/practice"
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => {
+            if (isMobile) setMobileSidebarOpen(false)
+          }}
           className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-3 text-sm font-bold uppercase tracking-wide text-on-primary transition-transform hover:brightness-110 active:scale-[0.98]"
         >
           <Play size={15} fill="currentColor" strokeWidth={0} />
@@ -83,12 +98,39 @@ export default function Sidebar() {
         </a>
 
         <button
-          onClick={logoutUser}
+          onClick={() => {
+            if (isMobile) setMobileSidebarOpen(false)
+            logoutUser()
+          }}
           className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg border border-outline-variant bg-surface px-4 py-2 text-sm font-medium text-on-surface-variant transition-colors hover:bg-surface-container hover:text-on-surface"
         >
           Logout
         </button>
       </div>
-    </aside>
+    </>
+  )
+
+  return (
+    <>
+      {/* Desktop Sidebar */}
+      <aside className="hidden md:flex md:w-64 shrink-0 flex-col border-r border-outline-variant bg-surface-container-lowest px-4 py-5 h-screen sticky top-0">
+        {renderContent(false)}
+      </aside>
+
+      {/* Mobile Drawer */}
+      {mobileSidebarOpen && (
+        <div className="fixed inset-0 z-50 md:hidden flex">
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity duration-300"
+            onClick={() => setMobileSidebarOpen(false)}
+          />
+          {/* Panel */}
+          <aside className="relative flex w-64 flex-col border-r border-outline-variant bg-surface-container-lowest px-4 py-5 h-full shadow-2xl animate-in slide-in-from-left duration-200">
+            {renderContent(true)}
+          </aside>
+        </div>
+      )}
+    </>
   )
 }
