@@ -26,6 +26,14 @@ export const sequelize =
           port: process.env.DB_PORT || 3306,
           dialect: "mysql",
           logging: false,
+          dialectOptions: process.env.DB_SSL === "true"
+            ? {
+                ssl: {
+                  rejectUnauthorized: false,
+                },
+              }
+            : {},
         }
       );
+
 
