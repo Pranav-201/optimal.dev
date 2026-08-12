@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { LogIn, UserPlus, Loader2 } from 'lucide-react'
 import { apiLogin, apiRegister } from '@/lib/api'
 import { useVault } from '@/lib/store'
+import logoUrl from '@/assets/optimal_logo.png'
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true)
@@ -40,7 +41,7 @@ export default function Auth() {
       <div className="w-full max-w-md relative z-10">
         <div className="mb-8 text-center">
           <img
-            src="/src/assets/optimal_logo.png"
+            src={logoUrl}
             alt="Optimal.dev"
             className="h-24 mx-auto mb-2 object-contain"
           />

@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom'
 import { LayoutGrid, History, Play, X } from 'lucide-react'
 import { useVault } from '@/lib/store'
+import logoUrl from '@/assets/optimal_logo.png'
 
 const navItems = [
   { to: '/', label: 'Dashboard', icon: LayoutGrid, end: true },
@@ -14,7 +15,7 @@ export default function Sidebar() {
     <>
       <div className="overflow-hidden flex items-center justify-between" style={{ height: '52px' }}>
         <img
-          src="/src/assets/optimal_logo.png"
+          src={logoUrl}
           alt="Optimal.dev"
           style={{
             height: '100px',
